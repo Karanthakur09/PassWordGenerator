@@ -9,6 +9,8 @@ function App() {
   const [charAllowed, setCharAllowed] = useState(false);
   const [passWord, setPaasword] = useState("");
 
+  const passWordRef = useRef(null);
+
   const PassWordGenerator = useCallback(() => {
     let pass = "";
     let str = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";//string from which random characters would be chosen
@@ -19,8 +21,16 @@ function App() {
       let idx = Math.floor(Math.random() * str.length + 1);
       pass += str.charAt(idx);
     }
+    setPaasword(pass);
 
   }, [length, numberAllowed, charAllowed, setPaasword]);
+
+  //copy clipboard functionality
+  const copyToClipboard=useCallback(()=>{
+    passWordRef.current?.select();//this syntax is for selecting optionally
+    passwordRef.current?.setSelectionRange(0,length);
+    window.navigator.clipboard.writeText(passWord);
+  },[passWord]);
 
   useEffect(() => {
     PassWordGenerator();
@@ -37,9 +47,11 @@ function App() {
           className='outline-none w-full py-1 px-3'
           placeholder='Password'
           readOnly
+          ref={passWordRef}
         />
         <button
           className='outline-none bg-blue-700 text-white px-3 py-0.5 shrink-0'
+          onClick={copyToClipboard}
         >copy</button>
 
       </div>
